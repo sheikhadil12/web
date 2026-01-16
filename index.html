@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EM OFFICIAL EMOTE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI, sans-serif;
+    background:#0a0000;
+    color:#fff;
+}
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
+h1{
+    text-align:center;
+    color:#ff2a2a;
+    letter-spacing:3px;
+}
+.card{
+    background:#150303;
+    border:1px solid #3a0f0f;
+    border-radius:10px;
+    padding:15px;
+    margin-bottom:15px;
+}
+label{
+    font-size:12px;
+    color:#aaa;
+}
+input{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    background:#2a0a0a;
+    border:1px solid #3a0f0f;
+    border-radius:6px;
+    color:#fff;
+}
+.emote-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
+    gap:10px;
+}
+.emote{
+    background:#1d0505;
+    border:2px solid transparent;
+    border-radius:8px;
+    padding:10px;
+    text-align:center;
+    cursor:pointer;
+}
+.emote.selected{
+    border-color:#ff0000;
+    box-shadow:0 0 15px red;
+}
+.emote img{
+    width:60px;
+    height:60px;
+}
+button{
+    width:100%;
+    padding:12px;
+    background:#ff0000;
+    border:none;
+    color:#fff;
+    font-weight:bold;
+    border-radius:8px;
+    cursor:pointer;
+}
+button:hover{
+    background:#cc0000;
+}
+#result{
+    margin-top:10px;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>⚡ EM OFFICIAL EMOTE</h1>
+
+<div class="card">
+    <label>Team Code</label>
+    <input id="teamcode" placeholder="Enter Team Code">
+</div>
+
+<div class="card">
+    <label>Player UID</label>
+    <input id="uid" placeholder="Enter UID">
+</div>
+
+<div class="card">
+    <label>Select Emote</label>
+    <div class="emote-grid">
+        <div class="emote" data-id="909000075">
+            <img src="https://i.imgur.com/8QfY5ZJ.png">
+            <div>MP40 MAX</div>
+        </div>
+        <div class="emote" data-id="909000063">
+            <img src="https://i.imgur.com/8QfY5ZJ.png">
+            <div>AK47 MAX</div>
+        </div>
+        <div class="emote" data-id="909035007">
+            <img src="https://i.imgur.com/8QfY5ZJ.png">
+            <div>M1887 MAX</div>
+        </div>
+    </div>
+</div>
+
+<button onclick="sendRequest()">SEND EMOTE</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+let selectedEmote = null;
+
+document.querySelectorAll(".emote").forEach(e=>{
+    e.onclick = ()=>{
+        document.querySelectorAll(".emote").forEach(x=>x.classList.remove("selected"));
+        e.classList.add("selected");
+        selectedEmote = e.dataset.id;
+    }
+});
+
+function sendRequest(){
+    const tc = document.getElementById("teamcode").value;
+    const uid = document.getElementById("uid").value;
+
+    if(!tc || !uid || !selectedEmote){
+        alert("সব ফিল্ড পূরণ করো");
+        return;
+    }
+
+    const url = `https://YOUR-API.onrender.com/join?tc=${tc}&uid1=${uid}&emote_id=${selectedEmote}`;
+
+    fetch(url)
+    .then(res=>res.json())
+    .then(data=>{
+        document.getElementById("result").innerHTML =
+            `<span style="color:lime">✔ ${data.message}</span>`;
+    })
+    .catch(()=>{
+        document.getElementById("result").innerHTML =
+            `<span style="color:red">❌ API Error</span>`;
+    });
+}
+</script>
+
+</body>
+</html>
